@@ -24,17 +24,17 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        toolbar: {
-          background: "rgba(26, 26, 26, 0.8)",
-          hover: "rgba(26, 26, 26, 0.9)",
-        },
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#007AFF",
+          foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "#F5F7FA",
+          foreground: "#64748B",
+        },
+        accent: {
+          DEFAULT: "#E8F2FF",
+          foreground: "#1E293B",
         },
       },
       keyframes: {
