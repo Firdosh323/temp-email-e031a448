@@ -62,11 +62,15 @@ export default {
           "0%": { transform: "scale(0.95)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" },
         },
+        marquee: {
+          to: { transform: 'translateX(-50%)' }
+        }
       },
       animation: {
         "fade-in": "fade-in 0.3s ease-out",
         "fade-out": "fade-out 0.2s ease-out",
         "scale-in": "scale-in 0.2s ease-out",
+        "marquee": "marquee var(--duration, 30s) linear infinite"
       },
     },
   },
