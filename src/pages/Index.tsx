@@ -2,7 +2,7 @@ import { Navigation } from '../components/Navigation';
 import { EmailGenerator } from '../components/EmailGenerator';
 import { Inbox } from '../components/Inbox';
 import { AboutSection } from '../components/AboutSection';
-import { ClientsSection } from '../components/ClientsSection';
+import { Footer } from '../components/Footer';
 import { Toaster } from 'sonner';
 
 const Index = () => {
@@ -15,7 +15,7 @@ const Index = () => {
         <Inbox />
       </div>
       <AboutSection />
-      <ClientsSection />
+      <Footer />
     </div>
   );
 };
