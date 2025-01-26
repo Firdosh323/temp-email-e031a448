@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 
 const API_URL = "https://1secmail.com/api/v1/";
-const CORS_PROXY = "https://corsproxy.io/?";
+const CORS_PROXY = "https://api.allorigins.win/raw?url=";
 
 interface EmailResponse {
   login: string;
