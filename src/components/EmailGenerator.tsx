@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Copy, RefreshCw, Trash2, Loader } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { emailService } from '@/services/emailService';
 
 export const EmailGenerator = () => {
   const [tempEmail, setTempEmail] = useState('');
@@ -13,26 +14,14 @@ export const EmailGenerator = () => {
     generateEmail();
   }, []);
 
-  const generateRandomString = (length = 10) => {
-    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-  };
-
   const generateEmail = async () => {
     setIsGenerating(true);
     try {
-      // Simulate API call with timeout
-      await new Promise(resolve => setTimeout(resolve, 800));
-      const randomString = generateRandomString();
-      const newEmail = `${randomString}@tempmail.com`;
+      const newEmail = await emailService.generateEmail();
       setTempEmail(newEmail);
       toast.success("New email address generated!");
     } catch (error) {
-      toast.error("Failed to generate email address");
+      console.error(error);
     } finally {
       setIsGenerating(false);
     }
@@ -60,11 +49,10 @@ export const EmailGenerator = () => {
 
     setIsRefreshing(true);
     try {
-      // Simulate API call with timeout
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      toast.success("Inbox refreshed successfully!");
+      const messages = await emailService.getMessages(tempEmail);
+      toast.success(`Inbox refreshed: ${messages.length} messages found`);
     } catch (error) {
-      toast.error("Failed to refresh inbox");
+      console.error(error);
     } finally {
       setIsRefreshing(false);
     }
