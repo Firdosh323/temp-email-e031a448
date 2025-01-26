@@ -2,6 +2,7 @@ import { Navigation } from '../components/Navigation';
 import { EmailGenerator } from '../components/EmailGenerator';
 import { Inbox } from '../components/Inbox';
 import { AboutSection } from '../components/AboutSection';
+import { MarqueeDemo } from '../components/MarqueeDemo';
 import { Toaster } from 'sonner';
 
 const Index = () => {
@@ -13,6 +14,7 @@ const Index = () => {
         <EmailGenerator />
         <Inbox />
       </div>
+      <MarqueeDemo />
       <AboutSection />
     </div>
   );
