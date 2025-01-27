@@ -4,36 +4,43 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { emailService } from '@/services/emailService';
 
-export const EmailGenerator = () => {
-  const [tempEmail, setTempEmail] = useState('');
+interface EmailGeneratorProps {
+  onEmailGenerated: (email: string) => void;
+  currentEmail: string;
+}
+
+export const EmailGenerator = ({ onEmailGenerated, currentEmail }: EmailGeneratorProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
-    generateEmail();
+    if (!currentEmail) {
+      generateEmail();
+    }
   }, []);
 
   const generateEmail = async () => {
     setIsGenerating(true);
     try {
       const newEmail = await emailService.generateEmail();
-      setTempEmail(newEmail);
+      onEmailGenerated(newEmail);
       toast.success("New email address generated!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to generate email");
     } finally {
       setIsGenerating(false);
     }
   };
 
   const copyEmail = async () => {
-    if (!tempEmail) {
+    if (!currentEmail) {
       toast.error("No email address to copy");
       return;
     }
     
     try {
-      await navigator.clipboard.writeText(tempEmail);
+      await navigator.clipboard.writeText(currentEmail);
       toast.success("Email copied to clipboard!");
     } catch (error) {
       toast.error("Failed to copy email address");
@@ -41,29 +48,30 @@ export const EmailGenerator = () => {
   };
 
   const refreshInbox = async () => {
-    if (!tempEmail) {
+    if (!currentEmail) {
       toast.error("No email address to refresh");
       return;
     }
 
     setIsRefreshing(true);
     try {
-      const messages = await emailService.getMessages(tempEmail);
+      const messages = await emailService.getMessages(currentEmail);
       toast.success(`Inbox refreshed: ${messages.length} messages found`);
     } catch (error) {
       console.error(error);
+      toast.error("Failed to refresh inbox");
     } finally {
       setIsRefreshing(false);
     }
   };
 
   const deleteEmail = () => {
-    if (!tempEmail) {
+    if (!currentEmail) {
       toast.error("No email address to delete");
       return;
     }
     
-    setTempEmail('');
+    onEmailGenerated('');
     toast.success("Email address deleted!");
   };
 
@@ -91,7 +99,7 @@ export const EmailGenerator = () => {
       <div className="bg-white rounded-full mb-6 flex items-center p-2 transition-all hover:shadow-lg hover:scale-105 duration-300 border border-gray-100">
         <input
           type="text"
-          value={tempEmail}
+          value={currentEmail}
           readOnly
           placeholder="Your temporary email address"
           className="flex-1 bg-transparent px-4 py-2 outline-none"
@@ -99,7 +107,7 @@ export const EmailGenerator = () => {
         <button
           onClick={copyEmail}
           className="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 transform hover:scale-105 active:scale-95"
-          disabled={!tempEmail}
+          disabled={!currentEmail}
         >
           Copy
         </button>
@@ -124,7 +132,7 @@ export const EmailGenerator = () => {
         </button>
         <button
           onClick={refreshInbox}
-          disabled={isRefreshing || !tempEmail}
+          disabled={isRefreshing || !currentEmail}
           className={cn(
             "flex items-center gap-2 px-6 py-2 bg-accent rounded-full transition-all duration-300",
             "hover:bg-accent/80 disabled:opacity-50 hover:shadow-md",
@@ -139,7 +147,7 @@ export const EmailGenerator = () => {
         </button>
         <button
           onClick={deleteEmail}
-          disabled={!tempEmail}
+          disabled={!currentEmail}
           className={cn(
             "flex items-center gap-2 px-6 py-2 bg-accent rounded-full transition-all duration-300",
             "hover:bg-accent/80 disabled:opacity-50 hover:shadow-md",
