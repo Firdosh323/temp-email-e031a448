@@ -12,6 +12,9 @@ interface Domain {
   domain: string;
 }
 
+// Store password temporarily in memory
+let currentPassword = "";
+
 export const emailService = {
   async generateEmail(): Promise<string> {
     try {
@@ -24,8 +27,9 @@ export const emailService = {
       const domains: Domain[] = domainsData['hydra:member'];
       const randomDomain = domains[Math.floor(Math.random() * domains.length)];
       
-      // Generate random username
+      // Generate random username and password
       const username = Math.random().toString(36).substring(2, 12);
+      currentPassword = Math.random().toString(36).substring(2, 12);
       
       // Create new email account
       const createResponse = await fetch(`${API_URL}/accounts`, {
@@ -35,7 +39,7 @@ export const emailService = {
         },
         body: JSON.stringify({
           address: `${username}@${randomDomain.domain}`,
-          password: Math.random().toString(36).substring(2, 12),
+          password: currentPassword,
         }),
       });
 
@@ -54,7 +58,7 @@ export const emailService = {
 
   async getMessages(email: string): Promise<any[]> {
     try {
-      // Get auth token first
+      // Get auth token using stored password
       const authResponse = await fetch(`${API_URL}/token`, {
         method: 'POST',
         headers: {
@@ -62,11 +66,13 @@ export const emailService = {
         },
         body: JSON.stringify({
           address: email,
-          password: "password", // Use the password from generateEmail
+          password: currentPassword,
         }),
       });
 
       if (!authResponse.ok) {
+        const errorData = await authResponse.json();
+        console.error('Auth error:', errorData);
         throw new Error('Failed to authenticate');
       }
 
