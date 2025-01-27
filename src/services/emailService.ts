@@ -1,5 +1,3 @@
-import { toast } from "sonner";
-
 const API_URL = "https://api.mail.gw";
 
 interface EmailResponse {
@@ -93,7 +91,6 @@ export const emailService = {
       return messagesData['hydra:member'];
     } catch (error) {
       console.error('Error fetching messages:', error);
-      toast.error("Failed to fetch messages");
       throw error;
     }
   },

@@ -29,8 +29,16 @@ export const Inbox = ({ currentEmail }: InboxProps) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const refreshInterval = setInterval(refreshInbox, 30000); // Refresh every 30 seconds
-    return () => clearInterval(refreshInterval);
+    if (currentEmail) {
+      refreshInbox();
+    }
+  }, [currentEmail]);
+
+  useEffect(() => {
+    if (currentEmail) {
+      const refreshInterval = setInterval(refreshInbox, 30000); // Refresh every 30 seconds
+      return () => clearInterval(refreshInterval);
+    }
   }, [currentEmail]);
 
   const refreshInbox = async () => {
@@ -39,6 +47,7 @@ export const Inbox = ({ currentEmail }: InboxProps) => {
     setLoading(true);
     try {
       const messages = await emailService.getMessages(currentEmail);
+      console.log('Fetched messages:', messages);
       setEmails(messages);
       toast.success(`Inbox refreshed: ${messages.length} messages found`);
     } catch (error) {
