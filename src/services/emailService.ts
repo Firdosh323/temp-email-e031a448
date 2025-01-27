@@ -71,11 +71,14 @@ export const emailService = {
       });
 
       if (!authResponse.ok) {
-        // If authentication fails, try to create a new email account
+        // If authentication fails, generate a new email and notify the UI
         console.error('Auth failed, generating new email...');
         const newEmail = await this.generateEmail();
         
-        // Retry authentication with new credentials
+        // Important: Update the UI with the new email
+        window.dispatchEvent(new CustomEvent('emailUpdated', { detail: newEmail }));
+        
+        // Get new auth token with the new credentials
         const retryAuthResponse = await fetch(`${API_URL}/token`, {
           method: 'POST',
           headers: {
@@ -88,6 +91,7 @@ export const emailService = {
         });
 
         if (!retryAuthResponse.ok) {
+          console.error('Retry auth failed');
           toast.error("Authentication failed");
           return [];
         }
@@ -107,12 +111,13 @@ export const emailService = {
         }
 
         const messagesData = await messagesResponse.json();
+        console.log('Fetched messages:', messagesData['hydra:member']);
         return messagesData['hydra:member'];
       }
 
       const { token } = await authResponse.json();
 
-      // Get messages
+      // Get messages with valid token
       const messagesResponse = await fetch(`${API_URL}/messages`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -125,6 +130,7 @@ export const emailService = {
       }
 
       const messagesData = await messagesResponse.json();
+      console.log('Fetched messages:', messagesData['hydra:member']);
       return messagesData['hydra:member'];
     } catch (error) {
       console.error('Error fetching messages:', error);

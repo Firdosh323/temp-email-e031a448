@@ -17,6 +17,17 @@ export const EmailGenerator = ({ onEmailGenerated, currentEmail }: EmailGenerato
     if (!currentEmail) {
       generateEmail();
     }
+
+    // Listen for email updates from the email service
+    const handleEmailUpdate = (event: CustomEvent) => {
+      onEmailGenerated(event.detail);
+    };
+
+    window.addEventListener('emailUpdated', handleEmailUpdate as EventListener);
+
+    return () => {
+      window.removeEventListener('emailUpdated', handleEmailUpdate as EventListener);
+    };
   }, []);
 
   const generateEmail = async () => {
