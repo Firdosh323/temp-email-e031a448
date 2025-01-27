@@ -20,10 +20,13 @@ interface Email {
   createdAt: string;
 }
 
-export const Inbox = () => {
+interface InboxProps {
+  currentEmail: string;
+}
+
+export const Inbox = ({ currentEmail }: InboxProps) => {
   const [emails, setEmails] = useState<Email[]>([]);
   const [loading, setLoading] = useState(false);
-  const [currentEmail, setCurrentEmail] = useState('');
 
   useEffect(() => {
     const refreshInterval = setInterval(refreshInbox, 30000); // Refresh every 30 seconds
