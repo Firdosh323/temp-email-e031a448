@@ -1,30 +1,50 @@
 import { toast } from "sonner";
 
-const API_URL = "https://1secmail.com/api/v1/";
-const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+const API_URL = "https://api.mail.gw";
 
 interface EmailResponse {
-  login: string;
+  id: string;
+  address: string;
+}
+
+interface Domain {
+  id: string;
   domain: string;
 }
 
 export const emailService = {
   async generateEmail(): Promise<string> {
     try {
-      const url = encodeURIComponent(`${API_URL}?action=genRandomMailbox&count=1`);
-      const response = await fetch(`${CORS_PROXY}${url}`);
+      // First get available domains
+      const domainsResponse = await fetch(`${API_URL}/domains`);
+      if (!domainsResponse.ok) {
+        throw new Error('Failed to fetch domains');
+      }
+      const domainsData = await domainsResponse.json();
+      const domains: Domain[] = domainsData['hydra:member'];
+      const randomDomain = domains[Math.floor(Math.random() * domains.length)];
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Generate random username
+      const username = Math.random().toString(36).substring(2, 12);
+      
+      // Create new email account
+      const createResponse = await fetch(`${API_URL}/accounts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          address: `${username}@${randomDomain.domain}`,
+          password: Math.random().toString(36).substring(2, 12),
+        }),
+      });
+
+      if (!createResponse.ok) {
+        throw new Error('Failed to create email account');
       }
       
-      const data = await response.json() as EmailResponse[];
-      
-      if (!Array.isArray(data) || data.length === 0) {
-        throw new Error('Invalid response format from email service');
-      }
-      
-      return data[0].login + "@" + data[0].domain;
+      const emailData: EmailResponse = await createResponse.json();
+      return emailData.address;
     } catch (error) {
       console.error('Error generating email:', error);
       toast.error("Failed to generate email");
@@ -34,23 +54,37 @@ export const emailService = {
 
   async getMessages(email: string): Promise<any[]> {
     try {
-      const [login, domain] = email.split("@");
-      const url = encodeURIComponent(
-        `${API_URL}?action=getMessages&login=${login}&domain=${domain}`
-      );
-      const response = await fetch(`${CORS_PROXY}${url}`);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Get auth token first
+      const authResponse = await fetch(`${API_URL}/token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          address: email,
+          password: "password", // Use the password from generateEmail
+        }),
+      });
+
+      if (!authResponse.ok) {
+        throw new Error('Failed to authenticate');
       }
-      
-      const data = await response.json();
-      
-      if (!Array.isArray(data)) {
-        throw new Error('Invalid response format from email service');
+
+      const { token } = await authResponse.json();
+
+      // Get messages
+      const messagesResponse = await fetch(`${API_URL}/messages`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!messagesResponse.ok) {
+        throw new Error('Failed to fetch messages');
       }
-      
-      return data;
+
+      const messagesData = await messagesResponse.json();
+      return messagesData['hydra:member'];
     } catch (error) {
       console.error('Error fetching messages:', error);
       toast.error("Failed to fetch messages");
