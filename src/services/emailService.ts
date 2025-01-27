@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 const API_URL = "https://api.mail.gw";
 
 interface EmailResponse {
@@ -71,7 +73,8 @@ export const emailService = {
       if (!authResponse.ok) {
         const errorData = await authResponse.json();
         console.error('Auth error:', errorData);
-        throw new Error('Failed to authenticate');
+        toast.error("Authentication failed");
+        return [];
       }
 
       const { token } = await authResponse.json();
@@ -80,6 +83,7 @@ export const emailService = {
       const messagesResponse = await fetch(`${API_URL}/messages`, {
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
       });
 
@@ -91,7 +95,8 @@ export const emailService = {
       return messagesData['hydra:member'];
     } catch (error) {
       console.error('Error fetching messages:', error);
-      throw error;
+      toast.error("Failed to fetch messages");
+      return [];
     }
   },
 };
