@@ -32,7 +32,32 @@ export const EmailView = ({ email, onClose }: EmailViewProps) => {
   };
 
   const handleDownload = () => {
-    toast.info("Download feature coming soon!");
+    try {
+      // Create text content combining email details and body
+      const emailContent = `
+From: ${email.from.name} <${email.from.address}>
+Subject: ${email.subject}
+Date: ${new Date(email.createdAt).toLocaleString()}
+
+${email.text || (email.html ? 'HTML Content Available' : 'No content available')}
+      `.trim();
+
+      // Create blob and download
+      const blob = new Blob([emailContent], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${email.subject.replace(/[^a-z0-9]/gi, '_')}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      toast.success('Email downloaded successfully!');
+    } catch (error) {
+      console.error('Download error:', error);
+      toast.error('Failed to download email');
+    }
   };
 
   const handleDelete = () => {
@@ -76,9 +101,14 @@ export const EmailView = ({ email, onClose }: EmailViewProps) => {
         {/* Email Content */}
         <div className="p-6 overflow-auto max-h-[50vh]">
           {email.html ? (
-            <div dangerouslySetInnerHTML={{ __html: email.html }} />
+            <div 
+              dangerouslySetInnerHTML={{ __html: email.html }} 
+              className="prose prose-sm max-w-none"
+            />
           ) : (
-            <p className="whitespace-pre-wrap">{email.text || "No content available"}</p>
+            <pre className="whitespace-pre-wrap font-sans text-gray-700">
+              {email.text || "No content available"}
+            </pre>
           )}
         </div>
 
