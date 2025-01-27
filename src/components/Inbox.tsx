@@ -14,7 +14,10 @@ import {
 
 interface Email {
   id: string;
-  from: string;
+  from: {
+    address: string;
+    name: string;
+  };
   subject: string;
   seen: boolean;
   createdAt: string;
@@ -47,12 +50,14 @@ export const Inbox = ({ currentEmail }: InboxProps) => {
     setLoading(true);
     try {
       const messages = await emailService.getMessages(currentEmail);
-      console.log('Fetched messages:', messages);
       setEmails(messages);
-      toast.success(`Inbox refreshed: ${messages.length} messages found`);
+      if (messages.length > 0) {
+        toast.success(`Inbox refreshed: ${messages.length} messages found`);
+      }
     } catch (error) {
       console.error('Error refreshing inbox:', error);
       toast.error('Failed to refresh inbox');
+      setEmails([]); // Reset emails on error
     } finally {
       setLoading(false);
     }
@@ -102,7 +107,9 @@ export const Inbox = ({ currentEmail }: InboxProps) => {
                   className="animate-fade-in hover:bg-accent/50 cursor-pointer"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <TableCell className="font-medium">{email.from}</TableCell>
+                  <TableCell className="font-medium">
+                    {email.from.name || email.from.address}
+                  </TableCell>
                   <TableCell>{email.subject}</TableCell>
                   <TableCell className="text-right">
                     <button 

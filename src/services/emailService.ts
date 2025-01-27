@@ -1,5 +1,3 @@
-import { toast } from "sonner";
-
 const API_URL = "https://api.mail.gw";
 
 interface EmailResponse {
@@ -51,14 +49,13 @@ export const emailService = {
       return emailData.address;
     } catch (error) {
       console.error('Error generating email:', error);
-      toast.error("Failed to generate email");
       throw error;
     }
   },
 
   async getMessages(email: string): Promise<any[]> {
     try {
-      // Get auth token using stored password
+      // Get auth token
       const authResponse = await fetch(`${API_URL}/token`, {
         method: 'POST',
         headers: {
@@ -92,7 +89,6 @@ export const emailService = {
 
         if (!retryAuthResponse.ok) {
           console.error('Retry auth failed');
-          toast.error("Authentication failed");
           return [];
         }
 
@@ -107,11 +103,10 @@ export const emailService = {
         });
 
         if (!messagesResponse.ok) {
-          throw new Error('Failed to fetch messages');
+          return [];
         }
 
         const messagesData = await messagesResponse.json();
-        console.log('Fetched messages:', messagesData['hydra:member']);
         return messagesData['hydra:member'];
       }
 
@@ -126,15 +121,13 @@ export const emailService = {
       });
 
       if (!messagesResponse.ok) {
-        throw new Error('Failed to fetch messages');
+        return [];
       }
 
       const messagesData = await messagesResponse.json();
-      console.log('Fetched messages:', messagesData['hydra:member']);
       return messagesData['hydra:member'];
     } catch (error) {
       console.error('Error fetching messages:', error);
-      toast.error("Failed to fetch messages");
       return [];
     }
   },
