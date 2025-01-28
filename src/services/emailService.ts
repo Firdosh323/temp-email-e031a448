@@ -11,6 +11,7 @@ interface Domain {
 }
 
 // Store credentials temporarily in memory
+let currentEmail = "";
 let currentPassword = "";
 
 export const emailService = {
@@ -28,6 +29,7 @@ export const emailService = {
       // Generate random username and password
       const username = Math.random().toString(36).substring(2, 12);
       currentPassword = Math.random().toString(36).substring(2, 12);
+      currentEmail = `${username}@${randomDomain.domain}`;
       
       // Create new email account
       const createResponse = await fetch(`${API_URL}/accounts`, {
@@ -36,7 +38,7 @@ export const emailService = {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          address: `${username}@${randomDomain.domain}`,
+          address: currentEmail,
           password: currentPassword,
         }),
       });
@@ -53,28 +55,37 @@ export const emailService = {
     }
   },
 
+  async getAuthToken(): Promise<string> {
+    const response = await fetch(`${API_URL}/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        address: currentEmail,
+        password: currentPassword,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to get auth token');
+    }
+
+    const data = await response.json();
+    return data.token;
+  },
+
   async getMessages(email: string): Promise<any[]> {
     try {
-      // Get auth token
-      const authResponse = await fetch(`${API_URL}/token`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          address: email,
-          password: currentPassword,
-        }),
-      });
-
-      if (!authResponse.ok) {
-        console.error('Auth failed:', await authResponse.text());
-        return [];
+      // Update current email if it's different
+      if (email !== currentEmail) {
+        currentEmail = email;
       }
 
-      const { token } = await authResponse.json();
+      // Get auth token
+      const token = await this.getAuthToken();
 
-      // Get messages with valid token
+      // Get messages with token
       const messagesResponse = await fetch(`${API_URL}/messages`, {
         headers: {
           'Authorization': `Bearer ${token}`,
