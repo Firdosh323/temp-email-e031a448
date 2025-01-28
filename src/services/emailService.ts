@@ -10,8 +10,7 @@ interface Domain {
   domain: string;
 }
 
-// Store credentials temporarily in memory
-let currentEmail = "";
+// Store password temporarily in memory
 let currentPassword = "";
 
 export const emailService = {
@@ -47,7 +46,6 @@ export const emailService = {
       }
       
       const emailData: EmailResponse = await createResponse.json();
-      currentEmail = emailData.address; // Store the current email
       return emailData.address;
     } catch (error) {
       console.error('Error generating email:', error);
@@ -55,40 +53,64 @@ export const emailService = {
     }
   },
 
-  async getAuthToken(): Promise<string> {
-    if (!currentEmail || !currentPassword) {
-      throw new Error('No valid credentials available');
-    }
-
-    const authResponse = await fetch(`${API_URL}/token`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        address: currentEmail,
-        password: currentPassword,
-      }),
-    });
-
-    if (!authResponse.ok) {
-      const errorData = await authResponse.json();
-      console.error('Auth error:', errorData);
-      throw new Error('Authentication failed');
-    }
-
-    const { token } = await authResponse.json();
-    return token;
-  },
-
   async getMessages(email: string): Promise<any[]> {
     try {
-      // Update currentEmail if it doesn't match
-      if (currentEmail !== email) {
-        currentEmail = email;
+      // Get auth token
+      const authResponse = await fetch(`${API_URL}/token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          address: email,
+          password: currentPassword,
+        }),
+      });
+
+      if (!authResponse.ok) {
+        // If authentication fails, generate a new email and notify the UI
+        console.error('Auth failed, generating new email...');
+        const newEmail = await this.generateEmail();
+        
+        // Important: Update the UI with the new email
+        window.dispatchEvent(new CustomEvent('emailUpdated', { detail: newEmail }));
+        
+        // Get new auth token with the new credentials
+        const retryAuthResponse = await fetch(`${API_URL}/token`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            address: newEmail,
+            password: currentPassword,
+          }),
+        });
+
+        if (!retryAuthResponse.ok) {
+          console.error('Retry auth failed');
+          return [];
+        }
+
+        const { token } = await retryAuthResponse.json();
+        
+        // Get messages with new token
+        const messagesResponse = await fetch(`${API_URL}/messages`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!messagesResponse.ok) {
+          return [];
+        }
+
+        const messagesData = await messagesResponse.json();
+        return messagesData['hydra:member'];
       }
 
-      const token = await this.getAuthToken();
+      const { token } = await authResponse.json();
 
       // Get messages with valid token
       const messagesResponse = await fetch(`${API_URL}/messages`, {
@@ -99,43 +121,14 @@ export const emailService = {
       });
 
       if (!messagesResponse.ok) {
-        throw new Error('Failed to fetch messages');
+        return [];
       }
 
       const messagesData = await messagesResponse.json();
-      const messages = messagesData['hydra:member'];
-
-      // Fetch full content for each message
-      const fullMessages = await Promise.all(
-        messages.map(async (message: any) => {
-          const fullMessage = await this.getMessage(message.id, token);
-          return {
-            ...message,
-            text: fullMessage.text,
-            html: fullMessage.html,
-          };
-        })
-      );
-
-      return fullMessages;
+      return messagesData['hydra:member'];
     } catch (error) {
       console.error('Error fetching messages:', error);
-      throw error;
+      return [];
     }
   },
-
-  async getMessage(messageId: string, token: string): Promise<any> {
-    const messageResponse = await fetch(`${API_URL}/messages/${messageId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!messageResponse.ok) {
-      throw new Error('Failed to fetch message content');
-    }
-
-    return messageResponse.json();
-  }
 };
