@@ -10,7 +10,8 @@ interface Domain {
   domain: string;
 }
 
-// Store password temporarily in memory
+// Store credentials temporarily in memory
+let currentEmail = "";
 let currentPassword = "";
 
 export const emailService = {
@@ -46,6 +47,7 @@ export const emailService = {
       }
       
       const emailData: EmailResponse = await createResponse.json();
+      currentEmail = emailData.address; // Store the current email
       return emailData.address;
     } catch (error) {
       console.error('Error generating email:', error);
@@ -53,19 +55,25 @@ export const emailService = {
     }
   },
 
-  async getAuthToken(email: string): Promise<string> {
+  async getAuthToken(): Promise<string> {
+    if (!currentEmail || !currentPassword) {
+      throw new Error('No valid credentials available');
+    }
+
     const authResponse = await fetch(`${API_URL}/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        address: email,
+        address: currentEmail,
         password: currentPassword,
       }),
     });
 
     if (!authResponse.ok) {
+      const errorData = await authResponse.json();
+      console.error('Auth error:', errorData);
       throw new Error('Authentication failed');
     }
 
@@ -75,7 +83,12 @@ export const emailService = {
 
   async getMessages(email: string): Promise<any[]> {
     try {
-      const token = await this.getAuthToken(email);
+      // Update currentEmail if it doesn't match
+      if (currentEmail !== email) {
+        currentEmail = email;
+      }
+
+      const token = await this.getAuthToken();
 
       // Get messages with valid token
       const messagesResponse = await fetch(`${API_URL}/messages`, {
