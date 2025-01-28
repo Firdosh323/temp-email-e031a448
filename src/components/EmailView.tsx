@@ -105,10 +105,14 @@ ${email.text || (email.html ? 'HTML Content Available' : 'No content available')
               dangerouslySetInnerHTML={{ __html: email.html }} 
               className="prose prose-sm max-w-none"
             />
-          ) : (
+          ) : email.text ? (
             <pre className="whitespace-pre-wrap font-sans text-gray-700">
-              {email.text || "No content available"}
+              {email.text}
             </pre>
+          ) : (
+            <div className="text-center text-gray-500 py-8">
+              Loading message content...
+            </div>
           )}
         </div>
 
