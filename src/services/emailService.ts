@@ -1,4 +1,5 @@
 const API_URL = "https://api.mail.gw";
+const TOKEN_URL = `${API_URL}/token`;
 
 interface EmailResponse {
   id: string;
@@ -92,7 +93,7 @@ export const emailService = {
 
   async getToken(): Promise<string> {
     try {
-      const authResponse = await fetch(`${API_URL}/token`, {
+      const authResponse = await fetch(TOKEN_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -104,6 +105,9 @@ export const emailService = {
       });
 
       if (!authResponse.ok) {
+        console.error('Auth response status:', authResponse.status);
+        const errorText = await authResponse.text();
+        console.error('Auth response error:', errorText);
         throw new Error('Authentication failed');
       }
 
