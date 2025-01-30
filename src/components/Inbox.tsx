@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { RefreshCw, Copy, Trash2, Mail, Search } from 'lucide-react';
+import { RefreshCw, Copy, Trash2, Mail, Search, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { emailService } from '@/services/emailService';
@@ -35,6 +35,7 @@ export const Inbox = ({ currentEmail }: InboxProps) => {
   const [loading, setLoading] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     if (currentEmail) {
@@ -44,15 +45,16 @@ export const Inbox = ({ currentEmail }: InboxProps) => {
 
   useEffect(() => {
     if (currentEmail) {
-      const refreshInterval = setInterval(refreshInbox, 30000);
+      const refreshInterval = setInterval(refreshInbox, 10000); // 10 seconds
       return () => clearInterval(refreshInterval);
     }
   }, [currentEmail]);
 
   const refreshInbox = async () => {
-    if (!currentEmail) return;
+    if (!currentEmail || loading) return;
     
     setLoading(true);
+    setIsRefreshing(true);
     try {
       const messages = await emailService.getMessages(currentEmail);
       setEmails(messages);
@@ -65,6 +67,7 @@ export const Inbox = ({ currentEmail }: InboxProps) => {
       setEmails([]);
     } finally {
       setLoading(false);
+      setTimeout(() => setIsRefreshing(false), 1000); // Keep animation for 1 second
     }
   };
 
@@ -85,6 +88,10 @@ export const Inbox = ({ currentEmail }: InboxProps) => {
   const deleteAllEmails = () => {
     setEmails([]);
     toast.success('All emails deleted!');
+  };
+
+  const handleViewEmail = (email: Email) => {
+    setSelectedEmail(email);
   };
 
   const filteredEmails = emails.filter(email => 
@@ -108,10 +115,11 @@ export const Inbox = ({ currentEmail }: InboxProps) => {
                 disabled={loading}
                 className={cn(
                   "p-2 text-gray-600 hover:text-primary transition-colors rounded-full hover:bg-white/50",
-                  "disabled:opacity-50 disabled:cursor-not-allowed"
+                  "disabled:opacity-50 disabled:cursor-not-allowed",
+                  isRefreshing && "animate-spin"
                 )}
               >
-                <RefreshCw className={cn("w-5 h-5", loading && "animate-spin")} />
+                <RefreshCw className="w-5 h-5" />
               </button>
               <button
                 onClick={copyEmail}
@@ -149,7 +157,8 @@ export const Inbox = ({ currentEmail }: InboxProps) => {
                 <TableRow>
                   <TableHead className="w-[200px]">From</TableHead>
                   <TableHead>Subject</TableHead>
-                  <TableHead className="text-right">Date</TableHead>
+                  <TableHead className="text-right w-[120px]">Date</TableHead>
+                  <TableHead className="w-[80px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -157,11 +166,10 @@ export const Inbox = ({ currentEmail }: InboxProps) => {
                   <TableRow 
                     key={email.id}
                     className={cn(
-                      "animate-fade-in hover:bg-accent/50 cursor-pointer",
+                      "animate-fade-in hover:bg-accent/50",
                       !email.seen && "font-medium"
                     )}
                     style={{ animationDelay: `${index * 50}ms` }}
-                    onClick={() => setSelectedEmail(email)}
                   >
                     <TableCell>
                       {email.from.name || email.from.address}
@@ -169,6 +177,14 @@ export const Inbox = ({ currentEmail }: InboxProps) => {
                     <TableCell>{email.subject}</TableCell>
                     <TableCell className="text-right text-gray-500">
                       {new Date(email.createdAt).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      <button
+                        onClick={() => handleViewEmail(email)}
+                        className="p-2 text-gray-600 hover:text-primary transition-colors rounded-full hover:bg-white/50"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
                     </TableCell>
                   </TableRow>
                 ))}
