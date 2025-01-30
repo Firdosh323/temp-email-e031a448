@@ -32,6 +32,7 @@ interface Message {
   seen: boolean;
   createdAt: string;
   updatedAt: string;
+  summary?: string;
 }
 
 interface MessageDetail extends Message {
@@ -46,14 +47,42 @@ interface MessageDetail extends Message {
   }>;
 }
 
-// Store credentials temporarily in memory
+// Store credentials and expiration temporarily in memory
 let currentEmail = "";
 let currentPassword = "";
+let expirationTime: number | null = null;
+let expirationTimer: NodeJS.Timeout | null = null;
 
 export const emailService = {
+  setExpiration(minutes: number) {
+    expirationTime = Date.now() + minutes * 60 * 1000;
+    
+    // Clear existing timer if any
+    if (expirationTimer) {
+      clearTimeout(expirationTimer);
+    }
+    
+    // Set new timer
+    expirationTimer = setTimeout(() => {
+      this.deleteAccount();
+    }, minutes * 60 * 1000);
+  },
+
+  async deleteAccount() {
+    if (currentEmail) {
+      // Clear stored credentials
+      currentEmail = "";
+      currentPassword = "";
+      expirationTime = null;
+      
+      // Dispatch event to notify UI
+      const event = new CustomEvent('emailDeleted');
+      window.dispatchEvent(event);
+    }
+  },
+
   async generateEmail(): Promise<string> {
     try {
-      // First get available domains
       const domainsResponse = await fetch(`${API_URL}/domains`);
       if (!domainsResponse.ok) {
         throw new Error('Failed to fetch domains');
@@ -62,12 +91,10 @@ export const emailService = {
       const domains: Domain[] = domainsData['hydra:member'];
       const randomDomain = domains[Math.floor(Math.random() * domains.length)];
       
-      // Generate random username
       const username = Math.random().toString(36).substring(2, 12);
       currentPassword = Math.random().toString(36).substring(2, 12);
       currentEmail = `${username}@${randomDomain.domain}`;
       
-      // Create new email account
       const createResponse = await fetch(`${API_URL}/accounts`, {
         method: 'POST',
         headers: {
@@ -84,6 +111,12 @@ export const emailService = {
       }
       
       const emailData: EmailResponse = await createResponse.json();
+      
+      // Set default expiration to 1 hour if not set
+      if (!expirationTime) {
+        this.setExpiration(60);
+      }
+      
       return emailData.address;
     } catch (error) {
       console.error('Error generating email:', error);
@@ -136,7 +169,7 @@ export const emailService = {
 
       const messagesData: MessageResponse = await messagesResponse.json();
       
-      // Fetch detailed content for each message
+      // Fetch detailed content and generate summaries for each message
       const detailedMessages = await Promise.all(
         messagesData['hydra:member'].map(async (message) => {
           try {
@@ -149,10 +182,15 @@ export const emailService = {
             
             if (detailResponse.ok) {
               const detailData: MessageDetail = await detailResponse.json();
+              
+              // Generate AI summary of the email content
+              const summary = await this.generateEmailSummary(detailData.text || detailData.html?.[0] || '');
+              
               return {
                 ...message,
                 text: detailData.text,
                 html: detailData.html?.[0],
+                summary,
               };
             }
           } catch (error) {
@@ -166,6 +204,23 @@ export const emailService = {
     } catch (error) {
       console.error('Error fetching messages:', error);
       throw error;
+    }
+  },
+
+  async generateEmailSummary(content: string): Promise<string> {
+    try {
+      // Use a simple extractive summarization for now
+      const sentences = content
+        .replace(/<[^>]*>/g, '') // Remove HTML tags
+        .split(/[.!?]+/)
+        .filter(sentence => sentence.trim().length > 0)
+        .slice(0, 2) // Take first two sentences
+        .join('. ');
+      
+      return sentences.length > 0 ? `${sentences}.` : 'No summary available.';
+    } catch (error) {
+      console.error('Error generating summary:', error);
+      return 'Error generating summary.';
     }
   },
 };

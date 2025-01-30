@@ -3,6 +3,7 @@ import { Copy, RefreshCw, Trash2, Loader } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { emailService } from '@/services/emailService';
+import { EmailSettings } from './EmailSettings';
 
 interface EmailGeneratorProps {
   onEmailGenerated: (email: string) => void;
@@ -18,15 +19,15 @@ export const EmailGenerator = ({ onEmailGenerated, currentEmail }: EmailGenerato
       generateEmail();
     }
 
-    // Listen for email updates from the email service
-    const handleEmailUpdate = (event: CustomEvent) => {
-      onEmailGenerated(event.detail);
+    const handleEmailDelete = () => {
+      onEmailGenerated('');
+      toast.info('Email address expired and was deleted');
     };
 
-    window.addEventListener('emailUpdated', handleEmailUpdate as EventListener);
-
+    window.addEventListener('emailDeleted', handleEmailDelete);
+    
     return () => {
-      window.removeEventListener('emailUpdated', handleEmailUpdate as EventListener);
+      window.removeEventListener('emailDeleted', handleEmailDelete);
     };
   }, []);
 
@@ -42,6 +43,10 @@ export const EmailGenerator = ({ onEmailGenerated, currentEmail }: EmailGenerato
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const handleExpirationChange = (minutes: number) => {
+    emailService.setExpiration(minutes);
   };
 
   const copyEmail = async () => {
@@ -124,7 +129,7 @@ export const EmailGenerator = ({ onEmailGenerated, currentEmail }: EmailGenerato
         </button>
       </div>
 
-      <div className="flex justify-center gap-4">
+      <div className="flex justify-center gap-4 items-center mb-6">
         <button
           onClick={generateEmail}
           disabled={isGenerating}
@@ -168,6 +173,8 @@ export const EmailGenerator = ({ onEmailGenerated, currentEmail }: EmailGenerato
           <Trash2 size={18} className="transition-transform group-hover:rotate-12" />
           Delete
         </button>
+        
+        <EmailSettings onExpirationChange={handleExpirationChange} />
       </div>
     </div>
   );
