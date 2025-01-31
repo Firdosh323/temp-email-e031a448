@@ -108,35 +108,35 @@ export const EmailGenerator = ({ onEmailGenerated, currentEmail }: EmailGenerato
         Email Address
       </h1>
 
-      <p className="text-gray-600 text-center mb-8 max-w-2xl mx-auto animate-fade-in">
+      <p className="text-gray-600 text-center mb-8 max-w-2xl mx-auto animate-fade-in px-4">
         Forget about spam, advertising mailings, hacking and attacking robots. Keep your real mailbox clean and secure. Temp Mail provides temporary, secure, anonymous, free, disposable email address.
       </p>
 
-      <div className="bg-white rounded-full mb-6 flex items-center p-2 transition-all hover:shadow-lg hover:scale-105 duration-300 border border-gray-100">
+      <div className="bg-white rounded-full mb-6 flex items-center p-2 transition-all hover:shadow-lg hover:scale-105 duration-300 border border-gray-100 mx-4">
         <input
           type="text"
           value={currentEmail}
           readOnly
           placeholder="Your temporary email address"
-          className="flex-1 bg-transparent px-4 py-2 outline-none"
+          className="flex-1 bg-transparent px-4 py-2 outline-none text-sm sm:text-base"
         />
         <button
           onClick={copyEmail}
-          className="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 transform hover:scale-105 active:scale-95"
+          className="bg-primary text-white px-4 sm:px-6 py-2 rounded-full hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 transform hover:scale-105 active:scale-95 text-sm sm:text-base whitespace-nowrap"
           disabled={!currentEmail}
         >
           Copy
         </button>
       </div>
 
-      <div className="flex justify-center gap-4 items-center mb-6">
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 items-center mb-6 px-4">
         <button
           onClick={generateEmail}
           disabled={isGenerating}
           className={cn(
-            "flex items-center gap-2 px-6 py-2 bg-accent rounded-full transition-all duration-300",
+            "flex items-center gap-2 px-4 sm:px-6 py-2 bg-accent rounded-full transition-all duration-300",
             "hover:bg-accent/80 disabled:opacity-50 hover:shadow-md",
-            "transform hover:scale-105 active:scale-95"
+            "transform hover:scale-105 active:scale-95 min-w-[120px] justify-center"
           )}
         >
           {isGenerating ? (
@@ -144,34 +144,34 @@ export const EmailGenerator = ({ onEmailGenerated, currentEmail }: EmailGenerato
           ) : (
             <Copy size={18} className="transition-transform group-hover:rotate-12" />
           )}
-          Generate
+          <span className="text-sm sm:text-base">Generate</span>
         </button>
         <button
           onClick={refreshInbox}
           disabled={isRefreshing || !currentEmail}
           className={cn(
-            "flex items-center gap-2 px-6 py-2 bg-accent rounded-full transition-all duration-300",
+            "flex items-center gap-2 px-4 sm:px-6 py-2 bg-accent rounded-full transition-all duration-300",
             "hover:bg-accent/80 disabled:opacity-50 hover:shadow-md",
-            "transform hover:scale-105 active:scale-95"
+            "transform hover:scale-105 active:scale-95 min-w-[120px] justify-center"
           )}
         >
           <RefreshCw
             size={18}
             className={cn(isRefreshing && "animate-spin")}
           />
-          Refresh
+          <span className="text-sm sm:text-base">Refresh</span>
         </button>
         <button
           onClick={deleteEmail}
           disabled={!currentEmail}
           className={cn(
-            "flex items-center gap-2 px-6 py-2 bg-accent rounded-full transition-all duration-300",
+            "flex items-center gap-2 px-4 sm:px-6 py-2 bg-accent rounded-full transition-all duration-300",
             "hover:bg-accent/80 disabled:opacity-50 hover:shadow-md",
-            "transform hover:scale-105 active:scale-95 group"
+            "transform hover:scale-105 active:scale-95 min-w-[120px] justify-center group"
           )}
         >
           <Trash2 size={18} className="transition-transform group-hover:rotate-12" />
-          Delete
+          <span className="text-sm sm:text-base">Delete</span>
         </button>
         
         <EmailSettings onExpirationChange={handleExpirationChange} />
