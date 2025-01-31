@@ -3,6 +3,7 @@ import { Navigation } from '../components/Navigation';
 import { EmailGenerator } from '../components/EmailGenerator';
 import { Inbox } from '../components/Inbox';
 import { AboutSection } from '../components/AboutSection';
+import { Testimonials } from '../components/Testimonials';
 import { Footer } from '../components/Footer';
 import { Toaster } from 'sonner';
 
@@ -18,6 +19,7 @@ const Index = () => {
         <Inbox currentEmail={currentEmail} />
       </div>
       <AboutSection />
+      <Testimonials />
       <Footer />
     </div>
   );
