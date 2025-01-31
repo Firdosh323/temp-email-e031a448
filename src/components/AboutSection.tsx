@@ -14,13 +14,14 @@ export const AboutSection = () => {
   return (
     <section className="py-16 bg-secondary">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="flex flex-col lg:flex-row gap-12 items-center">
+          {/* Left Content */}
           <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="space-y-6"
+            className="flex-1 space-y-6"
           >
             <span className="text-primary font-medium">About temp mail</span>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
@@ -52,38 +53,44 @@ export const AboutSection = () => {
               <span>→</span>
             </button>
           </motion.div>
-          
+
+          {/* Right Images */}
           <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="relative grid grid-cols-2 gap-4"
+            className="flex-1 space-y-8"
           >
-            <div className="space-y-4">
+            {/* First Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="bg-white p-6 rounded-2xl shadow-lg"
+            >
               <img 
-                src="/lovable-uploads/62ae5c84-028f-48c3-827d-c27ec753a7ae.png" 
-                alt="Email Security" 
-                className="rounded-2xl shadow-lg w-full object-cover h-48 animate-scale-in"
+                src="/lovable-uploads/7f23861d-bc00-470c-8f8d-3c1d6075e621.png" 
+                alt="Temporary Email Interface" 
+                className="w-full rounded-xl"
               />
+            </motion.div>
+
+            {/* Second Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="bg-white p-6 rounded-2xl shadow-lg ml-auto w-11/12"
+            >
               <img 
-                src="/placeholder.svg" 
-                alt="Email Interface" 
-                className="rounded-2xl shadow-lg w-full object-cover h-64 animate-scale-in"
+                src="/lovable-uploads/3240ca9f-aebe-489a-9f37-cd30fac54e70.png" 
+                alt="Email Inbox Interface" 
+                className="w-full rounded-xl"
               />
-            </div>
-            <div className="space-y-4 mt-8">
-              <img 
-                src="/placeholder.svg" 
-                alt="Email Protection" 
-                className="rounded-2xl shadow-lg w-full object-cover h-64 animate-scale-in"
-              />
-              <img 
-                src="/placeholder.svg" 
-                alt="Email Features" 
-                className="rounded-2xl shadow-lg w-full object-cover h-48 animate-scale-in"
-              />
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>
