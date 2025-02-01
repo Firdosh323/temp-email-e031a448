@@ -12,16 +12,16 @@ export const AboutSection = () => {
   ];
 
   return (
-    <section className="py-8 md:py-16 bg-secondary relative overflow-hidden">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
-          {/* Left Content */}
+    <div className="w-full">
+      {/* About Content Section */}
+      <section className="py-8 md:py-12 bg-white">
+        <div className="container mx-auto px-4">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="flex-1 space-y-4 md:space-y-6 relative z-10"
+            className="max-w-3xl mx-auto space-y-4 md:space-y-6 text-center"
           >
             <span className="text-primary font-medium">About temp mail</span>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800">
@@ -31,7 +31,7 @@ export const AboutSection = () => {
               Temp Mail provides disposable email addresses to protect your privacy. 
               Perfect for testing, registrations, and avoiding spam in your primary inbox.
             </p>
-            <ul className="space-y-3">
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-left max-w-2xl mx-auto mt-8">
               {features.map((feature, index) => (
                 <motion.li 
                   key={index} 
@@ -48,19 +48,19 @@ export const AboutSection = () => {
                 </motion.li>
               ))}
             </ul>
-            <button className="text-primary text-sm md:text-base font-medium flex items-center gap-2 hover:gap-3 transition-all">
-              Learn More
-              <span>→</span>
-            </button>
           </motion.div>
+        </div>
+      </section>
 
-          {/* Right Images with Overlapping Effect */}
+      {/* Images Section */}
+      <section className="py-8 md:py-12 bg-secondary relative overflow-hidden">
+        <div className="container mx-auto px-4">
           <motion.div 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="flex-1 relative h-[400px] md:h-[500px] lg:h-[600px] w-full"
+            className="relative h-[400px] md:h-[500px] max-w-4xl mx-auto"
           >
             {/* Background Card */}
             <motion.div
@@ -100,7 +100,7 @@ export const AboutSection = () => {
             <div className="absolute -right-20 -bottom-20 w-48 h-48 md:w-64 md:h-64 bg-primary/5 rounded-full blur-3xl" />
           </motion.div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 };
