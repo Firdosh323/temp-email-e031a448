@@ -5,33 +5,29 @@ export const AboutSection = () => {
   const features = [
     "No Sign up required",
     "No annoying mails",
-    "No installations",
-    "Secure & Private",
-    "Auto-delete after expiry",
-    "24/7 availability"
+    "No installations"
   ];
 
   return (
-    <div className="w-full">
-      {/* About Content Section */}
-      <section className="py-8 md:py-12 bg-white">
-        <div className="container mx-auto px-4">
+    <div className="w-full bg-white">
+      <div className="container mx-auto px-4 py-16 md:py-24">
+        <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-24">
+          {/* Left Content */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="max-w-3xl mx-auto space-y-4 md:space-y-6 text-center"
+            className="flex-1 space-y-6"
           >
-            <span className="text-primary font-medium">About temp mail</span>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800">
-              Your Secure Temporary Email Solution
+            <span className="text-primary/80 text-sm md:text-base">About temp mail</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 leading-tight">
+              What is Temp mail?
             </h2>
-            <p className="text-gray-600 text-sm md:text-base">
-              Temp Mail provides disposable email addresses to protect your privacy. 
-              Perfect for testing, registrations, and avoiding spam in your primary inbox.
+            <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-xl">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id est quis magna viverr
             </p>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-left max-w-2xl mx-auto mt-8">
+            <ul className="space-y-4">
               {features.map((feature, index) => (
                 <motion.li 
                   key={index} 
@@ -39,28 +35,31 @@ export const AboutSection = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-3"
                 >
-                  <span className="flex-shrink-0 w-4 h-4 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Check className="w-3 h-3 text-primary" />
+                  <span className="flex-shrink-0 w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <Check className="w-3 h-3 text-emerald-500" />
                   </span>
-                  <span className="text-gray-700 text-sm md:text-base">{feature}</span>
+                  <span className="text-gray-600">{feature}</span>
                 </motion.li>
               ))}
             </ul>
+            <motion.button
+              whileHover={{ x: 5 }}
+              className="text-primary flex items-center gap-2 font-medium mt-4"
+            >
+              Learn More
+              <span className="text-lg">→</span>
+            </motion.button>
           </motion.div>
-        </div>
-      </section>
 
-      {/* Images Section */}
-      <section className="py-8 md:py-12 bg-secondary relative overflow-hidden">
-        <div className="container mx-auto px-4">
+          {/* Right Images */}
           <motion.div 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="relative h-[400px] md:h-[500px] max-w-4xl mx-auto"
+            className="flex-1 relative min-h-[400px] md:min-h-[500px] w-full"
           >
             {/* Background Card */}
             <motion.div
@@ -70,11 +69,11 @@ export const AboutSection = () => {
               viewport={{ once: true }}
               className="absolute right-0 top-[5%] w-[85%] md:w-[90%] h-auto"
             >
-              <div className="bg-white p-3 md:p-6 rounded-xl md:rounded-2xl shadow-lg transform hover:scale-105 transition-transform duration-300">
+              <div className="bg-white rounded-2xl shadow-lg">
                 <img 
                   src="/lovable-uploads/7f23861d-bc00-470c-8f8d-3c1d6075e621.png" 
                   alt="Temporary Email Interface" 
-                  className="w-full rounded-lg md:rounded-xl"
+                  className="w-full rounded-xl"
                 />
               </div>
             </motion.div>
@@ -87,20 +86,17 @@ export const AboutSection = () => {
               viewport={{ once: true }}
               className="absolute left-0 top-[30%] w-[80%] md:w-[85%] h-auto z-20"
             >
-              <div className="bg-white p-3 md:p-6 rounded-xl md:rounded-2xl shadow-xl transform hover:scale-105 transition-transform duration-300">
+              <div className="bg-white rounded-2xl shadow-xl">
                 <img 
                   src="/lovable-uploads/3240ca9f-aebe-489a-9f37-cd30fac54e70.png" 
                   alt="Email Inbox Interface" 
-                  className="w-full rounded-lg md:rounded-xl"
+                  className="w-full rounded-xl"
                 />
               </div>
             </motion.div>
-
-            {/* Decorative Background Circle */}
-            <div className="absolute -right-20 -bottom-20 w-48 h-48 md:w-64 md:h-64 bg-primary/5 rounded-full blur-3xl" />
           </motion.div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
