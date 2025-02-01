@@ -27,9 +27,9 @@ const testimonials = [
 
 export const Testimonials = () => {
   return (
-    <section className="py-16 bg-[#F1F0FB]">
+    <section className="py-20 md:py-24 bg-[#F1F0FB]">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12 animate-fade-in">
+        <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             What Our Users Say
           </h2>
@@ -46,25 +46,36 @@ export const Testimonials = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.2 }}
               viewport={{ once: true }}
-              className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300"
+              className="relative group"
             >
-              <div className="flex items-center gap-4 mb-4">
-                <img
-                  src={testimonial.image}
-                  alt={testimonial.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div>
-                  <h3 className="font-semibold text-gray-900">{testimonial.name}</h3>
-                  <p className="text-sm text-gray-600">{testimonial.role}</p>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 relative">
+                {/* Animated Border */}
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary via-blue-400 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ padding: '2px' }}>
+                  <div className="h-full w-full bg-white rounded-xl" />
+                </div>
+                
+                {/* Content */}
+                <div className="relative z-10">
+                  <div className="flex items-center gap-4 mb-4">
+                    <img
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <h3 className="font-semibold text-gray-900">{testimonial.name}</h3>
+                      <p className="text-sm text-gray-600">{testimonial.role}</p>
+                    </div>
+                  </div>
+                  <div className="flex mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                  <p className="text-gray-700">{testimonial.content}</p>
                 </div>
               </div>
-              <div className="flex mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                ))}
-              </div>
-              <p className="text-gray-700">{testimonial.content}</p>
             </motion.div>
           ))}
         </div>
