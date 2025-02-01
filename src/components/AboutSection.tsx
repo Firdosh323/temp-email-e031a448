@@ -60,7 +60,7 @@ export const AboutSection = () => {
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="flex-1 relative h-[400px] md:h-[500px] lg:h-[600px] w-full"
+            className="flex-1 relative h-[300px] md:h-[400px] w-full max-w-[500px] mx-auto"
           >
             {/* Background Card */}
             <motion.div
@@ -68,13 +68,13 @@ export const AboutSection = () => {
               whileInView={{ opacity: 1, x: 0, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               viewport={{ once: true }}
-              className="absolute right-0 top-[5%] w-[85%] md:w-[90%] h-auto"
+              className="absolute right-0 top-[5%] w-[80%] md:w-[85%] h-auto"
             >
-              <div className="bg-white p-3 md:p-6 rounded-xl md:rounded-2xl shadow-lg transform hover:scale-105 transition-transform duration-300">
+              <div className="bg-white p-2 md:p-4 rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
                 <img 
                   src="/lovable-uploads/7f23861d-bc00-470c-8f8d-3c1d6075e621.png" 
                   alt="Temporary Email Interface" 
-                  className="w-full rounded-lg md:rounded-xl"
+                  className="w-full rounded-lg"
                 />
               </div>
             </motion.div>
@@ -85,13 +85,13 @@ export const AboutSection = () => {
               whileInView={{ opacity: 1, x: 0, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
               viewport={{ once: true }}
-              className="absolute left-0 top-[30%] w-[80%] md:w-[85%] h-auto z-20"
+              className="absolute left-0 top-[30%] w-[75%] md:w-[80%] h-auto z-20"
             >
-              <div className="bg-white p-3 md:p-6 rounded-xl md:rounded-2xl shadow-xl transform hover:scale-105 transition-transform duration-300">
+              <div className="bg-white p-2 md:p-4 rounded-xl shadow-xl transform hover:scale-105 transition-transform duration-300">
                 <img 
                   src="/lovable-uploads/3240ca9f-aebe-489a-9f37-cd30fac54e70.png" 
                   alt="Email Inbox Interface" 
-                  className="w-full rounded-lg md:rounded-xl"
+                  className="w-full rounded-lg"
                 />
               </div>
             </motion.div>
