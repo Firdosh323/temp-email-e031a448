@@ -1,5 +1,7 @@
+
 import { Star } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const testimonials = [
   {
@@ -7,21 +9,24 @@ const testimonials = [
     role: "Digital Marketer",
     content: "This temp mail service has been a game-changer for my workflow. It's incredibly reliable and user-friendly.",
     rating: 5,
-    image: "/placeholder.svg"
+    image: "/photo-1649972904349-6e44c42644a7",
+    initials: "SJ"
   },
   {
     name: "Michael Chen",
     role: "Software Developer",
     content: "The best temporary email service I've used. Clean interface and instant email generation make it perfect for testing.",
     rating: 5,
-    image: "/placeholder.svg"
+    image: "/photo-1581092795360-fd1ca04f0952",
+    initials: "MC"
   },
   {
     name: "Emma Davis",
     role: "Freelancer",
     content: "I use this service daily for my client registrations. It's fast, secure, and exactly what I need.",
     rating: 5,
-    image: "/placeholder.svg"
+    image: "/photo-1581091226825-a6a2a5aee158",
+    initials: "ED"
   }
 ];
 
@@ -58,11 +63,14 @@ export const Testimonials = () => {
                 {/* Content */}
                 <div className="relative z-10">
                   <div className="flex items-center gap-4 mb-4">
-                    <img
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
+                    <Avatar className="w-12 h-12">
+                      <AvatarImage 
+                        src={testimonial.image} 
+                        alt={testimonial.name} 
+                        className="object-cover"
+                      />
+                      <AvatarFallback>{testimonial.initials}</AvatarFallback>
+                    </Avatar>
                     <div>
                       <h3 className="font-semibold text-gray-900">{testimonial.name}</h3>
                       <p className="text-sm text-gray-600">{testimonial.role}</p>
