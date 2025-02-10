@@ -1,18 +1,10 @@
 
 import { useState, useEffect } from 'react';
-import { RefreshCw, Copy, Trash2, Mail, Search, Eye } from 'lucide-react';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
 import { emailService } from '@/services/emailService';
 import { EmailView } from './EmailView';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { InboxHeader } from './inbox/InboxHeader';
+import { EmailList } from './inbox/EmailList';
 
 interface Email {
   id: string;
@@ -72,20 +64,6 @@ export const Inbox = ({ currentEmail }: InboxProps) => {
     }
   };
 
-  const copyEmail = async () => {
-    if (!currentEmail) {
-      toast.error('No email address to copy');
-      return;
-    }
-    
-    try {
-      await navigator.clipboard.writeText(currentEmail);
-      toast.success('Email copied to clipboard!');
-    } catch (error) {
-      toast.error('Failed to copy email address');
-    }
-  };
-
   const deleteAllEmails = () => {
     setEmails([]);
     toast.success('All emails deleted!');
@@ -104,110 +82,24 @@ export const Inbox = ({ currentEmail }: InboxProps) => {
   return (
     <div className="max-w-4xl mx-auto mt-12 transform transition-all duration-500 hover:translate-y-[-2px]">
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-        {/* Header */}
-        <div className="p-6 bg-gradient-to-r from-primary/5 via-purple-500/5 to-primary/5 border-b">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-semibold text-gray-800 flex items-center gap-2 animate-fade-in">
-              <Mail className="text-primary animate-scale-in" /> Your Inbox
-            </h2>
-            <div className="flex gap-2">
-              <button
-                onClick={refreshInbox}
-                disabled={loading}
-                className={cn(
-                  "p-2 text-gray-600 hover:text-primary transition-all duration-300 rounded-full hover:bg-white/80 transform hover:scale-110",
-                  "disabled:opacity-50 disabled:cursor-not-allowed",
-                  isRefreshing && "animate-spin"
-                )}
-              >
-                <RefreshCw className="w-5 h-5" />
-              </button>
-              <button
-                onClick={copyEmail}
-                className="p-2 text-gray-600 hover:text-primary transition-all duration-300 rounded-full hover:bg-white/80 transform hover:scale-110"
-              >
-                <Copy className="w-5 h-5" />
-              </button>
-              <button
-                onClick={deleteAllEmails}
-                className="p-2 text-gray-600 hover:text-primary transition-all duration-300 rounded-full hover:bg-white/80 transform hover:scale-110"
-              >
-                <Trash2 className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
+        <InboxHeader
+          currentEmail={currentEmail}
+          loading={loading}
+          isRefreshing={isRefreshing}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          refreshInbox={refreshInbox}
+          deleteAllEmails={deleteAllEmails}
+        />
 
-          {/* Search */}
-          <div className="relative animate-fade-in" style={{ animationDelay: '200ms' }}>
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Search emails..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-full bg-white/80 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-            />
-          </div>
-        </div>
-
-        {/* Email List */}
         <div className="min-h-[400px] bg-gradient-to-b from-white to-gray-50/30">
-          {filteredEmails.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow className="hover:bg-gray-50/50">
-                  <TableHead className="w-[200px]">From</TableHead>
-                  <TableHead>Subject</TableHead>
-                  <TableHead className="text-right w-[120px]">Date</TableHead>
-                  <TableHead className="w-[80px]">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredEmails.map((email, index) => (
-                  <TableRow 
-                    key={email.id}
-                    className={cn(
-                      "animate-fade-in hover:bg-accent/30 transition-colors duration-200",
-                      !email.seen && "font-medium"
-                    )}
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  >
-                    <TableCell className="font-medium">
-                      {email.from.name || email.from.address}
-                    </TableCell>
-                    <TableCell>{email.subject}</TableCell>
-                    <TableCell className="text-right text-gray-500">
-                      {new Date(email.createdAt).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
-                      <button
-                        onClick={() => handleViewEmail(email)}
-                        className="p-2 text-gray-600 hover:text-primary transition-all duration-300 rounded-full hover:bg-white/80 transform hover:scale-110"
-                      >
-                        <Eye className="w-4 h-4" />
-                      </button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="text-center py-12">
-              <div className="w-24 h-24 mx-auto mb-4 bg-accent/50 rounded-full flex items-center justify-center transform transition-all duration-500 hover:scale-110 hover:rotate-12 animate-scale-in">
-                <Mail className="w-12 h-12 text-primary/40" />
-              </div>
-              <p className="text-gray-800 font-medium animate-fade-in" style={{ animationDelay: '400ms' }}>
-                Your inbox is empty
-              </p>
-              <p className="text-gray-500 text-sm animate-fade-in" style={{ animationDelay: '500ms' }}>
-                Awaiting incoming emails
-              </p>
-            </div>
-          )}
+          <EmailList 
+            emails={filteredEmails}
+            onViewEmail={handleViewEmail}
+          />
         </div>
       </div>
 
-      {/* Email View Modal */}
       {selectedEmail && (
         <EmailView 
           email={selectedEmail} 
