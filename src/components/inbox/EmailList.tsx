@@ -61,10 +61,11 @@ export const EmailList = ({ emails, onViewEmail }: EmailListProps) => {
           <TableRow 
             key={email.id}
             className={cn(
-              "animate-fade-in hover:bg-accent/30 transition-colors duration-200",
+              "animate-fade-in hover:bg-accent/30 transition-colors duration-200 cursor-pointer",
               !email.seen && "font-medium"
             )}
             style={{ animationDelay: `${index * 50}ms` }}
+            onClick={() => onViewEmail(email)}
           >
             <TableCell className="font-medium">
               {email.from.name || email.from.address}
@@ -75,7 +76,10 @@ export const EmailList = ({ emails, onViewEmail }: EmailListProps) => {
             </TableCell>
             <TableCell>
               <button
-                onClick={() => onViewEmail(email)}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent row click when clicking the button
+                  onViewEmail(email);
+                }}
                 className="p-2 text-gray-600 hover:text-primary transition-all duration-300 rounded-full hover:bg-white/80 transform hover:scale-110"
               >
                 <Eye className="w-4 h-4" />
