@@ -160,6 +160,8 @@ export const emailService = {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
+          'X-Forwarded-For': '0.0.0.0', // Mask IP
+          'DNT': '1', // Do Not Track
         },
       });
 
@@ -177,19 +179,26 @@ export const emailService = {
               headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
+                'X-Forwarded-For': '0.0.0.0', // Mask IP
+                'DNT': '1', // Do Not Track
               },
             });
             
             if (detailResponse.ok) {
               const detailData: MessageDetail = await detailResponse.json();
               
+              // Process HTML content with privacy features
+              const processedHtml = detailData.html 
+                ? privacyService.processEmailContent(detailData.html[0])
+                : undefined;
+
               // Generate AI summary of the email content
-              const summary = await this.generateEmailSummary(detailData.text || detailData.html?.[0] || '');
+              const summary = await this.generateEmailSummary(detailData.text || processedHtml || '');
               
               return {
                 ...message,
                 text: detailData.text,
-                html: detailData.html?.[0],
+                html: processedHtml,
                 summary,
               };
             }
