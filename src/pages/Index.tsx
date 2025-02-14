@@ -9,7 +9,7 @@ import { Footer } from '../components/Footer';
 import { Toaster } from 'sonner';
 import { QRCodeSVG } from 'qrcode.react';
 import { 
-  Browser, 
+  browser, 
   Smartphone, 
   Share2
 } from 'lucide-react';
@@ -71,7 +71,7 @@ const Index = () => {
                   className="w-full flex items-center gap-2"
                   onClick={() => window.open('https://chrome.google.com/webstore/category/extensions', '_blank')}
                 >
-                  <Browser className="w-4 h-4" />
+                  <browser className="w-4 h-4" />
                   Get Browser Extension
                 </Button>
 
