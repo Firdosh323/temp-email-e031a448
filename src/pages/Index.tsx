@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Navigation } from '../components/Navigation';
 import { EmailGenerator } from '../components/EmailGenerator';
@@ -11,7 +12,7 @@ const Index = () => {
   const [currentEmail, setCurrentEmail] = useState('');
 
   return (
-    <div className="min-h-screen bg-accent">
+    <div className="min-h-screen bg-gradient-to-b from-white to-accent/20">
       <Toaster position="top-center" />
       <Navigation />
       <div className="container mx-auto px-4 pt-24 pb-12">

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Copy, RefreshCw, Trash2, Loader, QrCode } from 'lucide-react';
 import { toast } from 'sonner';
@@ -112,106 +111,100 @@ export const EmailGenerator = ({ onEmailGenerated, currentEmail }: EmailGenerato
         </button>
       </div>
 
-      <h1 className="text-4xl font-bold mb-4 text-center animate-scale-in bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent">
-        <span className="font-normal">Temporary</span>
+      <h1 className="text-4xl md:text-5xl font-bold mb-6 text-center animate-scale-in">
+        <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+          Temporary Email
+        </span>
         <br />
-        Email Address
+        <span className="text-3xl md:text-4xl font-normal text-gray-600">
+          Generator
+        </span>
       </h1>
 
-      <p className="text-gray-600 text-center mb-8 max-w-2xl mx-auto animate-fade-in px-4">
-        Forget about spam, advertising mailings, hacking and attacking robots. Keep your real mailbox clean and secure. Temp Mail provides temporary, secure, anonymous, free, disposable email address.
+      <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto animate-fade-in px-4 text-lg leading-relaxed">
+        Protect your inbox from spam and keep your privacy intact. Generate secure, disposable email addresses in seconds.
       </p>
 
-      <div className="bg-white rounded-full mb-6 flex items-center p-2 transition-all hover:shadow-lg hover:scale-105 duration-300 border border-gray-100 mx-4">
-        <input
-          type="text"
-          value={currentEmail}
-          readOnly
-          placeholder="Your temporary email address"
-          className="flex-1 bg-transparent px-4 py-2 outline-none text-sm sm:text-base"
-        />
-        <div className="flex gap-2">
-          <Sheet>
-            <SheetTrigger asChild>
-              <button
-                className="p-2 text-gray-600 hover:text-primary transition-colors rounded-full hover:bg-gray-100"
-                disabled={!currentEmail}
-              >
-                <QrCode className="w-5 h-5" />
-              </button>
-            </SheetTrigger>
-            <SheetContent>
-              <SheetHeader>
-                <SheetTitle>Share via QR Code</SheetTitle>
-                <SheetDescription>
-                  Scan this code to quickly access your temporary email
-                </SheetDescription>
-              </SheetHeader>
-              <div className="flex justify-center items-center mt-8">
-                <div className="bg-white p-4 rounded-xl shadow-lg">
-                  <QRCodeSVG
-                    value={currentEmail || ''}
-                    size={200}
-                    level="H"
-                    includeMargin={true}
-                  />
+      <div className="glass rounded-2xl mb-8 p-1.5 transition-all hover:shadow-lg hover:scale-[1.02] duration-300 premium-shadow mx-4">
+        <div className="flex items-center bg-white rounded-xl">
+          <input
+            type="text"
+            value={currentEmail}
+            readOnly
+            placeholder="Your temporary email address"
+            className="flex-1 px-6 py-4 outline-none text-lg rounded-l-xl"
+          />
+          <div className="flex gap-2 p-2">
+            <Sheet>
+              <SheetTrigger asChild>
+                <button
+                  className="p-3 text-gray-600 hover:text-primary transition-colors rounded-xl hover:bg-gray-50"
+                  disabled={!currentEmail}
+                >
+                  <QrCode className="w-5 h-5" />
+                </button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Share via QR Code</SheetTitle>
+                  <SheetDescription>
+                    Scan this code to quickly access your temporary email
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="flex justify-center items-center mt-8">
+                  <div className="glass p-6 rounded-2xl premium-shadow">
+                    <QRCodeSVG
+                      value={currentEmail || ''}
+                      size={240}
+                      level="H"
+                      includeMargin={true}
+                    />
+                  </div>
                 </div>
-              </div>
-            </SheetContent>
-          </Sheet>
-          <button
-            onClick={copyEmail}
-            className="bg-primary text-white px-4 sm:px-6 py-2 rounded-full hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 transform hover:scale-105 active:scale-95 text-sm sm:text-base whitespace-nowrap"
-            disabled={!currentEmail}
-          >
-            Copy
-          </button>
+              </SheetContent>
+            </Sheet>
+            <button
+              onClick={copyEmail}
+              className="premium-gradient text-white px-6 py-3 rounded-xl hover:opacity-90 transition-all duration-300 disabled:opacity-50 transform hover:scale-105 active:scale-95 text-base font-medium whitespace-nowrap"
+              disabled={!currentEmail}
+            >
+              Copy
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 items-center mb-6 px-4">
+      <div className="flex flex-wrap justify-center gap-4 items-center mb-8 px-4">
         <button
           onClick={generateEmail}
           disabled={isGenerating}
-          className={cn(
-            "flex items-center gap-2 px-4 sm:px-6 py-2 bg-accent rounded-full transition-all duration-300",
-            "hover:bg-accent/80 disabled:opacity-50 hover:shadow-md",
-            "transform hover:scale-105 active:scale-95 min-w-[120px] justify-center"
-          )}
+          className="flex items-center gap-3 px-6 py-3 bg-white rounded-xl transition-all duration-300 hover:bg-gray-50 disabled:opacity-50 premium-shadow hover:shadow-lg transform hover:scale-105 active:scale-95 min-w-[140px] justify-center"
         >
           {isGenerating ? (
-            <Loader className="animate-spin" size={18} />
+            <Loader className="animate-spin" size={20} />
           ) : (
-            <Copy size={18} className="transition-transform group-hover:rotate-12" />
+            <Copy size={20} className="transition-transform group-hover:rotate-12" />
           )}
-          <span className="text-sm sm:text-base">Generate</span>
+          <span className="text-base font-medium">Generate</span>
         </button>
         <button
           onClick={refreshInbox}
           disabled={isRefreshing || !currentEmail}
-          className={cn(
-            "flex items-center gap-2 px-4 sm:px-6 py-2 bg-accent rounded-full transition-all duration-300",
-            "hover:bg-accent/80 disabled:opacity-50 hover:shadow-md",
-            "transform hover:scale-105 active:scale-95 min-w-[120px] justify-center"
-          )}
+          className="flex items-center gap-3 px-6 py-3 bg-white rounded-xl transition-all duration-300 hover:bg-gray-50 disabled:opacity-50 premium-shadow hover:shadow-lg transform hover:scale-105 active:scale-95 min-w-[140px] justify-center"
         >
           <RefreshCw
-            size={18}
+            size={20}
             className={cn(isRefreshing && "animate-spin")}
           />
-          <span className="text-sm sm:text-base">Refresh</span>
+          <span className="text-base font-medium">Refresh</span>
         </button>
         <button
           onClick={deleteEmail}
           disabled={!currentEmail}
-          className={cn(
-            "flex items-center gap-2 px-4 sm:px-6 py-2 bg-accent rounded-full transition-all duration-300",
-            "hover:bg-accent/80 disabled:opacity-50 hover:shadow-md",
-            "transform hover:scale-105 active:scale-95 min-w-[120px] justify-center group"
-          )}
+          className="flex items-center gap-3 px-6 py-3 bg-white rounded-xl transition-all duration-300 hover:bg-gray-50 disabled:opacity-50 premium-shadow hover:shadow-lg transform hover:scale-105 active:scale-95 min-w-[140px] justify-center group"
         >
-          <Trash2 size={18} className="transition-transform group-hover:rotate-12" />
-          <span className="text-sm sm:text-base">Delete</span>
+          <Trash2 size={20} className="transition-transform group-hover:rotate-12" />
+          <span className="text-base font-medium">Delete</span>
         </button>
         
         <EmailSettings onExpirationChange={handleExpirationChange} />

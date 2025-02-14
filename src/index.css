@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,13 +7,22 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 1rem;
   }
 
   * {
@@ -21,7 +31,7 @@
   }
 
   html {
-    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
     text-size-adjust: 100%;
   }
 
@@ -31,10 +41,14 @@
     padding: 0;
     min-height: 100vh;
     min-height: -webkit-fill-available;
-    /* Enable smooth scrolling */
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(0, 0, 0, 0.05) 100%
+    );
   }
 
   #root {
@@ -47,24 +61,20 @@
     flex-direction: column;
   }
 
-  /* Improve touch targets on mobile */
   button, a, input, select, textarea {
     @apply touch-manipulation;
   }
 
-  /* Improve mobile form inputs */
   input, textarea {
     @apply appearance-none;
   }
 
-  /* Fix iOS font sizing */
   @supports (-webkit-touch-callout: none) {
     body {
       -webkit-text-size-adjust: none;
     }
   }
 
-  /* Improve scrolling on iOS */
   @supports (-webkit-overflow-scrolling: touch) {
     body {
       -webkit-overflow-scrolling: touch;
@@ -72,15 +82,46 @@
   }
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
+/* Custom utility classes */
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-xl bg-white/80 border border-white/20;
+  }
+
+  .premium-shadow {
+    box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.1);
+  }
+
+  .premium-gradient {
+    @apply bg-gradient-to-r from-primary/80 to-blue-500/80;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Hide scrollbar */
 ::-webkit-scrollbar {
   display: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
 * {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Prevent text selection */
