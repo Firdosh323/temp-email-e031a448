@@ -1,9 +1,19 @@
+
 import { useState, useEffect } from 'react';
-import { Copy, RefreshCw, Trash2, Loader } from 'lucide-react';
+import { Copy, RefreshCw, Trash2, Loader, QrCode } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { emailService } from '@/services/emailService';
 import { EmailSettings } from './EmailSettings';
+import { QRCodeSVG } from 'qrcode.react';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface EmailGeneratorProps {
   onEmailGenerated: (email: string) => void;
@@ -120,13 +130,43 @@ export const EmailGenerator = ({ onEmailGenerated, currentEmail }: EmailGenerato
           placeholder="Your temporary email address"
           className="flex-1 bg-transparent px-4 py-2 outline-none text-sm sm:text-base"
         />
-        <button
-          onClick={copyEmail}
-          className="bg-primary text-white px-4 sm:px-6 py-2 rounded-full hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 transform hover:scale-105 active:scale-95 text-sm sm:text-base whitespace-nowrap"
-          disabled={!currentEmail}
-        >
-          Copy
-        </button>
+        <div className="flex gap-2">
+          <Sheet>
+            <SheetTrigger asChild>
+              <button
+                className="p-2 text-gray-600 hover:text-primary transition-colors rounded-full hover:bg-gray-100"
+                disabled={!currentEmail}
+              >
+                <QrCode className="w-5 h-5" />
+              </button>
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Share via QR Code</SheetTitle>
+                <SheetDescription>
+                  Scan this code to quickly access your temporary email
+                </SheetDescription>
+              </SheetHeader>
+              <div className="flex justify-center items-center mt-8">
+                <div className="bg-white p-4 rounded-xl shadow-lg">
+                  <QRCodeSVG
+                    value={currentEmail || ''}
+                    size={200}
+                    level="H"
+                    includeMargin={true}
+                  />
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+          <button
+            onClick={copyEmail}
+            className="bg-primary text-white px-4 sm:px-6 py-2 rounded-full hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 transform hover:scale-105 active:scale-95 text-sm sm:text-base whitespace-nowrap"
+            disabled={!currentEmail}
+          >
+            Copy
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap justify-center gap-2 sm:gap-4 items-center mb-6 px-4">
