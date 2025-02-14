@@ -1,3 +1,4 @@
+
 import { Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -27,18 +28,30 @@ const testimonials = [
 
 export const Testimonials = () => {
   return (
-    <section className="py-20 md:py-24 bg-[#F1F0FB]">
+    <section className="py-24 md:py-32 bg-gradient-to-b from-accent/10 to-white relative overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
+          >
             What Our Users Say
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto"
+          >
             Join thousands of satisfied users who trust our temporary email service
-          </p>
+          </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={index}
@@ -48,38 +61,35 @@ export const Testimonials = () => {
               viewport={{ once: true }}
               className="relative group"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 relative">
-                {/* Animated Border */}
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary via-blue-400 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ padding: '2px' }}>
-                  <div className="h-full w-full bg-white rounded-xl" />
-                </div>
-                
-                {/* Content */}
-                <div className="relative z-10">
-                  <div className="flex items-center gap-4 mb-4">
+              <div className="glass rounded-2xl p-8 premium-shadow hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="relative w-16 h-16 rounded-full overflow-hidden premium-shadow">
                     <img
                       src={testimonial.image}
                       alt={testimonial.name}
-                      className="w-12 h-12 rounded-full object-cover"
+                      className="w-full h-full object-cover"
                     />
-                    <div>
-                      <h3 className="font-semibold text-gray-900">{testimonial.name}</h3>
-                      <p className="text-sm text-gray-600">{testimonial.role}</p>
-                    </div>
                   </div>
-                  <div className="flex mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                    ))}
+                  <div>
+                    <h3 className="font-semibold text-xl text-gray-900">{testimonial.name}</h3>
+                    <p className="text-primary">{testimonial.role}</p>
                   </div>
-                  <p className="text-gray-700">{testimonial.content}</p>
                 </div>
+                <div className="flex mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-gray-700 text-lg leading-relaxed">{testimonial.content}</p>
               </div>
             </motion.div>
           ))}
         </div>
       </div>
+
+      {/* Background Elements */}
+      <div className="absolute -left-40 -bottom-40 w-80 h-80 bg-primary/5 rounded-full blur-3xl" />
+      <div className="absolute -right-40 -top-40 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl" />
     </section>
   );
 };

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Logo } from './Logo';
@@ -15,17 +16,17 @@ export const Navigation = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
+    <nav className="fixed top-0 left-0 right-0 glass z-50 premium-shadow">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           <Logo />
           
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-12">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`relative py-2 text-sm font-medium transition-colors ${
+                className={`relative py-2 text-base font-medium transition-all duration-300 ${
                   location.pathname === item.path
                     ? 'text-primary'
                     : 'text-gray-600 hover:text-primary'
@@ -38,7 +39,7 @@ export const Navigation = () => {
           
           <button 
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="md:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -47,17 +48,17 @@ export const Navigation = () => {
 
       {/* Mobile menu */}
       {isOpen && (
-        <div className="md:hidden absolute top-16 left-0 right-0 bg-white border-b border-gray-100 animate-fade-in">
+        <div className="md:hidden absolute top-20 left-0 right-0 glass animate-fade-in premium-shadow">
           <div className="container mx-auto px-4 py-4">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 onClick={() => setIsOpen(false)}
-                className={`block py-3 text-sm font-medium ${
+                className={`block py-4 text-base font-medium transition-all duration-300 ${
                   location.pathname === item.path
                     ? 'text-primary'
-                    : 'text-gray-600'
+                    : 'text-gray-600 hover:text-primary'
                 }`}
               >
                 {item.label}
