@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Clock } from 'lucide-react';
 import {
@@ -34,7 +35,7 @@ export const EmailSettings = ({ onExpirationChange }: EmailSettingsProps) => {
     <div className="flex items-center gap-2 px-2 sm:px-4">
       <Clock className="w-4 h-4 text-gray-500" />
       <Select value={selectedExpiration} onValueChange={handleExpirationChange}>
-        <SelectTrigger className="w-[140px] sm:w-[180px] text-sm sm:text-base">
+        <SelectTrigger className="w-[120px] sm:w-[180px] text-sm sm:text-base h-[34px] sm:h-[42px]">
           <SelectValue placeholder="Select expiration" />
         </SelectTrigger>
         <SelectContent>
