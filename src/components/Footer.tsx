@@ -6,27 +6,27 @@ import { Facebook, Instagram, Linkedin, Twitter, Mail, MapPin, Phone } from "luc
 
 export const Footer = () => {
   return (
-    <footer className="py-20 md:py-32 bg-gradient-to-b from-white to-accent/10">
+    <footer className="py-20 md:py-32 bg-gradient-to-b from-white to-accent/10 relative overflow-hidden">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 animate-fade-in">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 relative z-10">
           {/* Company Info */}
           <div className="space-y-8 transform hover:scale-105 transition-transform duration-300">
             <Logo />
             <div className="space-y-6">
-              <div className="flex items-center gap-4 text-gray-600 hover:text-primary transition-colors">
-                <div className="glass p-3 rounded-xl">
+              <div className="flex items-center gap-4 text-gray-600 hover:text-primary transition-colors group">
+                <div className="glass p-3 rounded-xl group-hover:scale-110 transition-transform">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <p className="text-lg">House-09, Rd no. 15, Mecca, Saudi Arabia</p>
               </div>
-              <div className="flex items-center gap-4 text-gray-600 hover:text-primary transition-colors">
-                <div className="glass p-3 rounded-xl">
+              <div className="flex items-center gap-4 text-gray-600 hover:text-primary transition-colors group">
+                <div className="glass p-3 rounded-xl group-hover:scale-110 transition-transform">
                   <Phone className="w-5 h-5" />
                 </div>
                 <p className="text-lg">+966 0576 XXX XXX</p>
               </div>
-              <div className="flex items-center gap-4 text-gray-600 hover:text-primary transition-colors">
-                <div className="glass p-3 rounded-xl">
+              <div className="flex items-center gap-4 text-gray-600 hover:text-primary transition-colors group">
+                <div className="glass p-3 rounded-xl group-hover:scale-110 transition-transform">
                   <Mail className="w-5 h-5" />
                 </div>
                 <p className="text-lg">contact@tempmail.com</p>
@@ -42,9 +42,10 @@ export const Footer = () => {
                 <a
                   key={index}
                   href={social.href}
-                  className="glass p-3 rounded-xl hover:bg-primary hover:text-white transform hover:scale-110 transition-all duration-300"
+                  className="glass p-3 rounded-xl hover:bg-primary hover:text-white transform hover:scale-110 transition-all duration-300 relative group"
                 >
-                  <social.icon className="w-5 h-5" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-blue-600 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity" />
+                  <social.icon className="w-5 h-5 relative z-10" />
                 </a>
               ))}
             </div>
@@ -64,7 +65,8 @@ export const Footer = () => {
                 "Blogs",
               ].map((item, index) => (
                 <li key={index} className="transform hover:translate-x-2 transition-transform">
-                  <a href="#" className="text-gray-600 hover:text-primary transition-colors text-lg">
+                  <a href="#" className="text-gray-600 hover:text-primary transition-colors text-lg flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-primary/20" />
                     {item}
                   </a>
                 </li>
@@ -80,8 +82,9 @@ export const Footer = () => {
             <p className="text-gray-600 text-lg">
               Stay updated with our latest features and releases.
             </p>
-            <div className="glass p-2 rounded-xl premium-shadow">
-              <div className="flex gap-2">
+            <div className="glass p-2 rounded-xl premium-shadow relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-blue-500/5 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+              <div className="flex gap-2 relative z-10">
                 <Input 
                   type="email" 
                   placeholder="Enter your email" 
@@ -90,7 +93,7 @@ export const Footer = () => {
                 <Button 
                   type="submit" 
                   size="icon"
-                  className="bg-primary hover:bg-primary/90 transition-colors rounded-lg"
+                  className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 text-white transition-colors rounded-lg"
                 >
                   →
                 </Button>
@@ -105,12 +108,16 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-20 pt-8 border-t text-center">
+        <div className="mt-20 pt-8 border-t text-center relative z-10">
           <p className="text-gray-600 animate-fade-in text-lg">
             ©{new Date().getFullYear()} Temp Mail. All rights reserved.
           </p>
         </div>
       </div>
+
+      {/* Background Elements */}
+      <div className="absolute -left-40 bottom-0 w-96 h-96 bg-gradient-to-t from-primary/5 to-transparent rounded-full blur-3xl" />
+      <div className="absolute -right-40 top-0 w-96 h-96 bg-gradient-to-b from-blue-500/5 to-transparent rounded-full blur-3xl" />
     </footer>
   );
 };

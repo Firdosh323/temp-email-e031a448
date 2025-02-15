@@ -1,6 +1,8 @@
+
 import { Navigation } from '../components/Navigation';
 import { Mail, MessageSquare, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Footer } from '../components/Footer';
 
 const Contact = () => {
   const contactMethods = [
@@ -98,6 +100,7 @@ const Contact = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

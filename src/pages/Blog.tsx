@@ -1,5 +1,7 @@
+
 import { Navigation } from '../components/Navigation';
 import { Calendar, User, ArrowRight } from 'lucide-react';
+import { Footer } from '../components/Footer';
 
 const Blog = () => {
   const posts = [
@@ -94,6 +96,7 @@ const Blog = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

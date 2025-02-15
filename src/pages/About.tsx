@@ -1,5 +1,7 @@
+
 import { Navigation } from '../components/Navigation';
 import { Shield, Clock, Lock } from 'lucide-react';
+import { Footer } from '../components/Footer';
 
 const About = () => {
   const features = [
@@ -62,6 +64,7 @@ const About = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
