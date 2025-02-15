@@ -8,21 +8,21 @@ const testimonials = [
     role: "Digital Marketer",
     content: "This temp mail service has been a game-changer for my workflow. It's incredibly reliable and user-friendly.",
     rating: 5,
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=200&h=200"
   },
   {
     name: "Michael Chen",
     role: "Software Developer",
     content: "The best temporary email service I've used. Clean interface and instant email generation make it perfect for testing.",
     rating: 5,
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=200&h=200"
   },
   {
     name: "Emma Davis",
     role: "Freelancer",
     content: "I use this service daily for my client registrations. It's fast, secure, and exactly what I need.",
     rating: 5,
-    image: "/placeholder.svg"
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=200&h=200"
   }
 ];
 
