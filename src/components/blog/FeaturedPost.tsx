@@ -1,6 +1,7 @@
 
 import { Calendar, User, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 interface FeaturedPostProps {
   post: {
@@ -15,12 +16,16 @@ interface FeaturedPostProps {
 }
 
 export const FeaturedPost = ({ post }: FeaturedPostProps) => {
+  const navigate = useNavigate();
+  const slug = post.title.toLowerCase().replace(/\s+/g, '-');
+
   return (
     <motion.article 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
       className="relative group cursor-pointer"
+      onClick={() => navigate(`/blog/${slug}`)}
     >
       <div className="absolute inset-0 bg-gradient-to-r from-primary to-blue-600 rounded-2xl opacity-0 group-hover:opacity-90 transition-opacity duration-300" />
       <img
