@@ -1,4 +1,3 @@
-
 const API_URL = "https://api.mail.gw";
 const TOKEN_URL = `${API_URL}/token`;
 
@@ -58,10 +57,12 @@ export const emailService = {
   setExpiration(minutes: number) {
     expirationTime = Date.now() + minutes * 60 * 1000;
     
+    // Clear existing timer if any
     if (expirationTimer) {
       clearTimeout(expirationTimer);
     }
     
+    // Set new timer
     expirationTimer = setTimeout(() => {
       this.deleteAccount();
     }, minutes * 60 * 1000);
@@ -69,59 +70,14 @@ export const emailService = {
 
   async deleteAccount() {
     if (currentEmail) {
+      // Clear stored credentials
       currentEmail = "";
       currentPassword = "";
       expirationTime = null;
       
+      // Dispatch event to notify UI
       const event = new CustomEvent('emailDeleted');
       window.dispatchEvent(event);
-    }
-  },
-
-  async getAvailableDomains(): Promise<string[]> {
-    try {
-      const response = await fetch(`${API_URL}/domains`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch domains');
-      }
-      const data = await response.json();
-      return data['hydra:member'].map((domain: Domain) => domain.domain);
-    } catch (error) {
-      console.error('Error fetching domains:', error);
-      throw error;
-    }
-  },
-
-  async generateCustomEmail(username: string, domain: string): Promise<string> {
-    try {
-      currentPassword = Math.random().toString(36).substring(2, 12);
-      currentEmail = `${username}@${domain}`;
-      
-      const createResponse = await fetch(`${API_URL}/accounts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          address: currentEmail,
-          password: currentPassword,
-        }),
-      });
-
-      if (!createResponse.ok) {
-        throw new Error('Failed to create custom email account');
-      }
-      
-      const emailData: EmailResponse = await createResponse.json();
-      
-      if (!expirationTime) {
-        this.setExpiration(60);
-      }
-      
-      return emailData.address;
-    } catch (error) {
-      console.error('Error generating custom email:', error);
-      throw error;
     }
   },
 
@@ -156,6 +112,7 @@ export const emailService = {
       
       const emailData: EmailResponse = await createResponse.json();
       
+      // Set default expiration to 1 hour if not set
       if (!expirationTime) {
         this.setExpiration(60);
       }
