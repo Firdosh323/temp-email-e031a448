@@ -4,6 +4,7 @@ import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
 import { Calendar, User, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { posts } from '../data/blogPosts';
 
 const BlogPost = () => {
   const { slug } = useParams();
